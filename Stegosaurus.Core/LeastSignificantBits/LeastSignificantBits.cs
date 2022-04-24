@@ -11,29 +11,15 @@ namespace Stegosaurus.Core.LeastSignificantBits
     /// Hides a message inside chosen image using every color channel (R, G, B). A single pixel can contain 3 bits of information.
     /// Binary '00000000' is appended to mark the end of message.
     /// </summary>
-    public class LeastSignificantBits : IStenographyMethod, IDisposable
+    public class LeastSignificantBits : BaseStenographyMethod
     {
-        private const string BinaryMessageEnd = "00000000";
-
-        private readonly Stream _imageFile;
-        private readonly Image<Rgba32> _image;
-
-        public LeastSignificantBits(string filePath) : this(new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        public LeastSignificantBits(string filePath) : base(filePath)
         { }
 
-        public LeastSignificantBits(Stream imageFile)
-        {
-            _imageFile = imageFile;
-            _image = Image.Load<Rgba32>(_imageFile);
-        }
+        public LeastSignificantBits(Stream imageFile) : base(imageFile)
+        { }
 
-        public void Encode(string outputPath, string message)
-        {
-            var encodedImage = Encode(message);
-            encodedImage.Save(outputPath);
-        }
-
-        public Image<Rgba32> Encode(string message)
+        public override Image<Rgba32> Encode(string message)
         {
             var binaryMessage = message.ToBinary() + BinaryMessageEnd;
             var bitIndex = 0;
@@ -80,7 +66,7 @@ namespace Stegosaurus.Core.LeastSignificantBits
             return _image;
         }
 
-        public string Decode()
+        public override string Decode()
         {
             var result = "";
 
@@ -128,12 +114,6 @@ namespace Stegosaurus.Core.LeastSignificantBits
             }
 
             return false;
-        }
-
-        public void Dispose()
-        {
-            _image?.Dispose();
-            _imageFile?.Dispose();
         }
     }
 }
