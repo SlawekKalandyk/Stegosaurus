@@ -8,14 +8,14 @@ namespace Stegosaurus.Tests.CoreTests
         [Fact]
         public void EncodingTest()
         {
-            var filePath = @"C:\Users\slawek\Downloads\sample.png";
+            var filePath = @"..\..\..\TestImages\sample.png";
             var message = "Hello there";
 
             using var leastSignificantBits = new LeastSignificantBits(filePath);
             leastSignificantBits.Encode(message);
-            var decoded = leastSignificantBits.Decode();
+            var decodedMessage = leastSignificantBits.Decode();
 
-            Assert.Equal(message, decoded);
+            Assert.Equal(message, decodedMessage);
         }
     }
 }
